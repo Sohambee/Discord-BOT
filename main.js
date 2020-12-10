@@ -24,17 +24,25 @@ client.on('message', message => {
 
     let args = message.content.substring(prefix.length).split(" ");
 
-    if (args[0] == 'play') {
+    if (args[0] == 'play' || args[0] == 'p') {
         client.commands.get('play').execute(message, args);
     } 
 
-    if (args[0] == 'skip') {
+    if (args[0] == 'skip' || args[0] == 's') {
         client.commands.get('play').execute(message,args);
     }
 
-    if (args[0] == 'q') {
+    if (args[0] == 'queue' || args[0] == 'q') {
         client.commands.get('play').execute(message,args);
+    }
+
+    if (args[0] == 'ping') {
+        client.commands.get('ping').execute(message,args);
+    }
+
+    if (args[0] == 'clear') {
+        client.commands.get('clear').execute(message,args);
     }
 })
 
-client.login('Nzg1NzM1ODMxNzI5ODY0NzQ1.X88LhA.AwtGr0P4Pco-smsZ94YjZ-9x_FE');
+client.login('Nzg1NzM1ODMxNzI5ODY0NzQ1.X88LhA.kj4aMSzQp5AkzCnNGxP0mqRTRJM');
