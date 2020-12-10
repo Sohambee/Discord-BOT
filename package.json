@@ -4,11 +4,11 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
-    "discord": "^0.8.2",
     "request": "^2.88.2",
     "ytdl-getinfo": "^1.1.0"
   },
   "devDependencies": {
+    "discord": "^0.8.2",
     "discord.js": "^12.5.1",
     "opusscript": "0.0.7",
     "ytdl-core": "^4.1.4"
