@@ -39,36 +39,53 @@ module.exports = {
         }
 
         if (args[0] == 'play' || args[0] == 'p') {
+            var link = "https://www.youtube.com/";
+
             if (!args[1]) {
                 message.reply("please provide a valid link!");
                 return;
             }
 
-            async function delMessage() {
-                message.delete();
-                var linkInput = await ytdl.getInfo(args[1]);
-                var songTitle = JSON.stringify(linkInput.videoDetails.title);
-                var songURL = linkInput.videoDetails.video_url;
-                var send = `${songTitle} - <${songURL}> - by ${message.member}\n`
-                message.channel.send('**ADDED TO QUEUE:** ' + send);
+
+            if (args[1].includes(link)) {
+                async function delMessage() {
+                    message.delete();
+                    var linkInput = await ytdl.getInfo(args[1]);
+                    var songTitle = JSON.stringify(linkInput.videoDetails.title);
+                    var songURL = linkInput.videoDetails.video_url;
+                    var send = `${songTitle} - <${songURL}> - by ${message.member}\n`
+                    message.channel.send('**ADDED TO QUEUE:** ' + send);
+                }
+
+                delMessage();
+
+                var server = servers[message.guild.id];
+                server.queue.push(args[1]);
+
+                if (!message.member.voice.connection) message.member.voice.channel.join().then(function (connection) {
+                    if (!server.queue[1]) {
+                        play(connection, message);
+                    }
+                })
+            } else {
+                var search = require('youtube-search');
+                var opts = {
+                    maxResults: 5,
+                    key: 'yourkey'
+                };
+                search('jsconf', opts, function (err, results) {
+                    if (err) return console.log(err);
+
+                    console.log(results);
+                });
             }
 
-            delMessage();
-
-            var server = servers[message.guild.id];
-            server.queue.push(args[1]);
-
-            if (!message.member.voice.connection) message.member.voice.channel.join().then(function (connection) {
-                if (!server.queue[1]) {
-                    play(connection, message);
-                }
-            })
         } else if (args[0] == 'skip' || args[0] == 's') {
             var removal = parseInt(args[1]);
             message.delete();
 
             async function removeSong() {
-                
+
                 var removeInfo = await ytdl.getInfo(server.queue[removal - 1]);
                 var songTitle = JSON.stringify(removeInfo.videoDetails.title);
                 var removed = `${removal}. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
