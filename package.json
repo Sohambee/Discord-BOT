@@ -4,6 +4,7 @@
   "description": "",
   "main": "main.js",
   "dependencies": {
+    "discord.js": "^12.5.1",
     "request": "^2.88.2",
     "ytdl-getinfo": "^1.1.0"
   },
