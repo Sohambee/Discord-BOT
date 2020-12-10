@@ -65,9 +65,10 @@ module.exports = {
             })
         } else if (args[0] == 'skip' || args[0] == 's') {
             var removal = parseInt(args[1]);
+            message.delete();
 
             async function removeSong() {
-                message.delete();
+                
                 var removeInfo = await ytdl.getInfo(server.queue[removal - 1]);
                 var songTitle = JSON.stringify(removeInfo.videoDetails.title);
                 var removed = `${removal}. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
@@ -75,7 +76,7 @@ module.exports = {
                 message.channel.send(removed);
             }
 
-            if (args[1] && Number.isInteger(removal) && removal != 0) {
+            if (Number.isInteger(removal) && removal != 1) {
                 removeSong();
                 server.queue.splice(removal - 1, 1);
             } else if (!args[1] || removal == 1) {
