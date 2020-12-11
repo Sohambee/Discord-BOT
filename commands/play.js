@@ -118,7 +118,6 @@ module.exports = {
                     } else {
                         connection.disconnect();
                         connected = false;
-                        message.reply("Testqueue is empty!");
                     }
                 }); else {
                     message.reply("queue is empty!");
