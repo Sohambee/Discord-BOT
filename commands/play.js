@@ -99,7 +99,7 @@ module.exports = {
 
             async function removeSong() {
 
-                var removeInfo = await ytdl.getInfo(server.queue[0);
+                var removeInfo = await ytdl.getInfo(server.queue[0]);
                 var songTitle = JSON.stringify(removeInfo.videoDetails.title);
                 var removed = `${removal}. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
 
