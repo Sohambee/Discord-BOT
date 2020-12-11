@@ -71,7 +71,7 @@ module.exports = {
                 var search = require('youtube-search');
                 var opts = {
                     maxResults: 5,
-                    key: 'AIzaSyChYNbaGJ8cVAPNvhTyAlZMH1afSxetriI',
+                    key: process.env.API_KEY,
                     type: 'video'
                 };
                 search(args[1], opts, function (err, results) {
@@ -143,7 +143,7 @@ module.exports = {
                 }
                 queue();
             } else {
-                message.reply("queue is empty!")
+                message.reply("queue is empty!");
             }
         }
     }
