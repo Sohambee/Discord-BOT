@@ -111,7 +111,6 @@ module.exports = {
                 server.queue.splice(removal - 1, 1);
             } else if (!args[1] || removal == 1) {
                 if (!message.member.voice.connection && connected) message.member.voice.channel.join().then(function (connection) {
-                    removeSong();
                     server.queue.shift();
                     if (server.queue[0]) {
                         play(connection, message);
@@ -120,6 +119,7 @@ module.exports = {
                         connected = false;
                         message.reply("queue is empty!");
                     }
+                    removeSong();
                 }); else {
                     message.reply("queue is empty!");
                 }
