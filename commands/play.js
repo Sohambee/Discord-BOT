@@ -101,7 +101,7 @@ module.exports = {
 
                 var removeInfo = await ytdl.getInfo(server.queue[0]);
                 var songTitle = JSON.stringify(removeInfo.videoDetails.title);
-                var removed = `${removal}. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
+                var removed = `1. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
 
                 message.channel.send(removed);
             }
@@ -144,7 +144,7 @@ module.exports = {
                 }
                 queue();
             } else {
-                message.reply("The queue is empty!")
+                message.reply("queue is empty!")
             }
         }
     }
