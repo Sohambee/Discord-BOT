@@ -113,13 +113,13 @@ module.exports = {
                 if (!message.member.voice.connection && connected) message.member.voice.channel.join().then(function (connection) {
                     server.queue.shift();
                     if (server.queue[0]) {
+                        removeSong();
                         play(connection, message);
                     } else {
                         connection.disconnect();
                         connected = false;
                         message.reply("queue is empty!");
                     }
-                    removeSong();
                 }); else {
                     message.reply("queue is empty!");
                 }
