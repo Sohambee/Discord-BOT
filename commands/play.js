@@ -3,6 +3,7 @@ const Discord = require("discord.js");
 const { getInfo } = require("ytdl-core");
 
 const ytdl = require("ytdl-core");
+const { execute } = require("./ping");
 const servers = {};
 var connected = false;
 
@@ -46,7 +47,6 @@ module.exports = {
                 return;
             }
 
-
             if (args[1].includes(link)) {
                 async function delMessage() {
                     message.delete();
@@ -71,12 +71,16 @@ module.exports = {
                 var search = require('youtube-search');
                 var opts = {
                     maxResults: 5,
-                    key: 'yourkey'
+                    key: 'AIzaSyChYNbaGJ8cVAPNvhTyAlZMH1afSxetriI',
+                    type: 'video'
                 };
-                search('jsconf', opts, function (err, results) {
+                search(args[1], opts, function (err, results) {
                     if (err) return console.log(err);
-
-                    console.log(results);
+                    var send = "**SEARCH RESULTS**:\n";
+                    for (var i = 0; i < results.length; i++) {
+                        send += `${i + 1}. ${results[i].title}\n`;
+                    }
+                    message.channel.send(send);
                 });
             }
 
@@ -84,7 +88,7 @@ module.exports = {
             var removal = parseInt(args[1]);
             message.delete();
 
-            async function removeSong() {
+            async function removeSongNum() {
 
                 var removeInfo = await ytdl.getInfo(server.queue[removal - 1]);
                 var songTitle = JSON.stringify(removeInfo.videoDetails.title);
@@ -93,11 +97,21 @@ module.exports = {
                 message.channel.send(removed);
             }
 
-            if (Number.isInteger(removal) && removal != 1) {
-                removeSong();
+            async function removeSong() {
+
+                var removeInfo = await ytdl.getInfo(server.queue[0);
+                var songTitle = JSON.stringify(removeInfo.videoDetails.title);
+                var removed = `${removal}. ${songTitle}: was removed from the queue! - by ${message.member}\n`;
+
+                message.channel.send(removed);
+            }
+
+            if (Number.isInteger(removal) && removal != 1 && server.queue[removal - 1]) {
+                removeSongNum();
                 server.queue.splice(removal - 1, 1);
             } else if (!args[1] || removal == 1) {
                 if (!message.member.voice.connection && connected) message.member.voice.channel.join().then(function (connection) {
+                    removeSong();
                     server.queue.shift();
                     if (server.queue[0]) {
                         play(connection, message);
