@@ -111,14 +111,14 @@ module.exports = {
                 server.queue.splice(removal - 1, 1);
             } else if (!args[1] || removal == 1) {
                 if (!message.member.voice.connection && connected) message.member.voice.channel.join().then(function (connection) {
+                    removeSong();
                     server.queue.shift();
                     if (server.queue[0]) {
-                        removeSong();
                         play(connection, message);
                     } else {
                         connection.disconnect();
                         connected = false;
-                        message.reply("queue is empty!");
+                        message.reply("Testqueue is empty!");
                     }
                 }); else {
                     message.reply("queue is empty!");
