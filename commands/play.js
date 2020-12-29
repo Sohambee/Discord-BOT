@@ -1,16 +1,12 @@
-const { Channel } = require("discord.js")
-const Discord = require("discord.js");
-const { getInfo } = require("ytdl-core");
-
 const ytdl = require("ytdl-core");
-const { execute } = require("./ping");
 const servers = {};
 var connected = false;
 
 module.exports = {
     name: 'play',
     description: "This command plays a video from Youtube.",
-    execute(message, args) {
+    async execute(message, args) {
+
         function play(connection, message) {
             var server = servers[message.guild.id];
 
@@ -38,7 +34,7 @@ module.exports = {
         if (!servers[message.guild.id]) servers[message.guild.id] = {
             queue: []
         }
-
+        
         if (args[0] == 'play' || args[0] == 'p') {
             var link = "https://www.youtube.com/";
 
@@ -66,21 +62,61 @@ module.exports = {
                     if (!server.queue[1]) {
                         play(connection, message);
                     }
-                })
+                });
             } else {
+                
                 var search = require('youtube-search');
                 var opts = {
                     maxResults: 5,
                     key: process.env.API_KEY,
                     type: 'video'
                 };
-                search(args[1], opts, function (err, results) {
+
+                const ytsearch = args.slice(1).join(' ');
+                search(ytsearch, opts, function (err, results) {
                     if (err) return console.log(err);
-                    var send = "**SEARCH RESULTS**:\n";
+                    var send = "\n**SEARCH RESULTS**:\n";
                     for (var i = 0; i < results.length; i++) {
                         send += `${i + 1}. ${results[i].title}\n`;
                     }
-                    message.channel.send(send);
+                    msg = message.channel.send(send);
+
+                    message.channel.awaitMessages(m => m.author.id == message.author.id, { max: 1, time: 15000 }).then(collected => {
+                        var server = servers[message.guild.id];
+                        if (collected.first().content == '1') {
+                            collected.first().delete();
+                            collected.first().reply(`adding **1. ${results[0].title}**`);
+                            server.queue.push(results[0].link);
+                        } else if (collected.first().content == '2') {
+                            collected.first().delete();
+                            collected.first().reply(`adding **2. ${results[1].title}**`);
+                            server.queue.push(results[1].link);
+                        } else if (collected.first().content == '3') {
+                            collected.first().delete();
+                            collected.first().reply(`adding **3. ${results[2].title}**`);
+                            server.queue.push(results[2].link);
+                        } else if (collected.first().content == '4') {
+                            collected.first().delete();
+                            collected.first().reply(`adding **4. ${results[3].title}**`);
+                            server.queue.push(results[3].link);
+                        } else if (collected.first().content == '5') {
+                            collected.first().delete();
+                            collected.first().reply(`adding **5. ${results[4].title}**`);
+                            server.queue.push(results[4].link);
+                        } else {
+                            collected.first().delete();
+                            collected.first().reply("invalid response, try again.")
+                            return;
+                        }
+
+                        if (!message.member.voice.connection) message.member.voice.channel.join().then(function (connection) {
+                            if (!server.queue[1]) {
+                                play(connection, message);
+                            }
+                        });
+                    }).catch(() => {
+                        message.reply("timed out, try again.")
+                    });
                 });
             }
 
